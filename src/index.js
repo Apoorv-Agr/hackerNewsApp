@@ -24,8 +24,6 @@ sagaMiddleware.run(rootSaga);
 
 store.dispatch(loadStoryListIdAction());
 
-// store.dispatch(loadStoryDetailsAction());
-
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>

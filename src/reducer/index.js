@@ -19,7 +19,6 @@ export default function handleActions(state = initialAppState, action = {}) {
         storyIdList: action.storyIdList,
       };
     case FETCH_STORY_DETAIL:
-      //   debugger;
       return {
         ...state,
         storyDetails: action.storyDetails,
