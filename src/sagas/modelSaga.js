@@ -11,7 +11,6 @@ export function* fetchStoryIdsList() {
   const data = yield call(getStoryId);
   yield put({ type: FETCH_STORY_ID, storyIdList: data });
 }
-// function getDetails
 export function* fetchStoryIdsData(action) {
   const data = yield call(getStoryData, action.payLoad);
   yield put({ type: FETCH_STORY_DETAIL, storyDetails: data });
@@ -21,7 +20,7 @@ export function* fetchStoryIdsData(action) {
 
 export function* loadStoryList() {
   yield takeEvery(LOAD_STORY_LIST_ID, fetchStoryIdsList);
-//   yield takeEvery(LOAD_STORY_DETAIL, fetchStoryIdsData);
+  yield takeEvery(LOAD_STORY_DETAIL, fetchStoryIdsData);
 }
 
 export default function* rootSaga() {

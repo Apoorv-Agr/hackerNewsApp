@@ -1,54 +1,41 @@
 import React, { useState, useEffect } from "react";
-// import { getStoryId, getStoryData } from "../services/apis";
 import StoryDetails from "../components/StoryDetails";
 import { connect } from "react-redux";
-import { loadStoryDetailsAction } from "../actions/index";
+import {
+  loadStoryDetailsAction,
+  updateFinalDataAction,
+  onDeleteAction,
+} from "../actions";
+import { API_LIMIT } from "../constants";
 
 const Story = (props) => {
-  // console.log("props : ", props);
-  // const [storyListData, updateStory] = useState([]);
   const [metaData, setMetaData] = useState([]);
   const [storyDetailsData, setData] = useState([]);
   const [showLoader, setDataLoaded] = useState(true);
-  /* useEffect(() => {
-    // getStoryId().then((resp) => {
-    //   
-    // });
-    updateStory(props.storyIdList)
-  }, [props.storyIdList]); */
 
   useEffect(() => {
-    // const { dispatch } = props;
-    console.log('props : ',props)
-    let allPromiseArr = [];
-    Object.values(props.storyIdList).map((storyId, idx) => {
-      // allPromiseArr.push(dispatch(fetchSortIdsDetails(storyId)));
-      // debugger;
-      props.dispatch(loadStoryDetailsAction(storyId));
-    });
-    // Promise.all(allPromiseArr).then((storyData) => {
-    //   const filteredData = storyData.filter((data, idx) => {
-    //     if (data && data.url && !data.isDeleted) {
-    //       data.key = idx + 1;
-    //       return data;
-    //     }
-    //   });
-    //   setData(filteredData);
-    // });
+    props.storyIdList &&
+      Object.values(props.storyIdList).map((storyId, idx) => {
+        props.dispatch(loadStoryDetailsAction(storyId));
+      });
   }, [props.storyIdList]);
 
   useEffect(() => {
-    // const { dispatch } = props;
-    console.log('props : ',props)
-    let allData = [];
-    
-    setData([
-      ...storyDetailsData,
-      props.storyDetails
-    ]);
-
-    
+    setMetaData([...metaData, props.storyDetails]);
   }, [props.storyDetails]);
+
+  useEffect(() => {
+    if (metaData.length === API_LIMIT) {
+      const filteredData = metaData.filter((data, idx) => {
+        if (data && data.url && !data.isDeleted) {
+          data.key = idx + 1;
+          return data;
+        }
+      });
+      props.dispatch(updateFinalDataAction(filteredData));
+      setData(filteredData);
+    }
+  }, [metaData]);
 
   useEffect(() => {
     if (storyDetailsData.length > 0) {
@@ -66,13 +53,14 @@ const Story = (props) => {
     setData([]);
     setTimeout(() => {
       storyDetailsDataCopy.find((a) => a.id === obj.id).isDeleted = true;
+      props.dispatch(onDeleteAction(storyDetailsDataCopy));
       afterDeleteData = storyDetailsDataCopy.filter((data) => {
         if (!data.isDeleted) {
           return data;
         }
       });
       return setData(afterDeleteData);
-    }, 200);
+    }, 100);
     return afterDeleteData;
   };
 
@@ -80,11 +68,11 @@ const Story = (props) => {
     let storyDetailsDataCopy = storyDetailsData.map((singleStory) => {
       return { ...singleStory };
     });
-    setData([]);
+    // setData([]);
     setTimeout(() => {
       storyDetailsDataCopy.find((a) => a.id === obj.id).isRead = !key;
       return setData(storyDetailsDataCopy);
-    }, 200);
+    }, 20);
     return storyDetailsDataCopy;
   };
   return (
@@ -99,18 +87,8 @@ const Story = (props) => {
   );
 };
 
-
-/* const mapDispatchToProps = (dispatch) => {
-  return {
-    onSearchChange: (event) => {
-      dispatch(setSearchField(event.target.value));
-    },
-  };
-}; */
-
-
 function mapStateToProps(state) {
-  return { storyIdList: state.storyIdList,storyDetails:state.storyDetails };
+  return { storyIdList: state.storyIdList, storyDetails: state.storyDetails };
 }
 
 export default connect(mapStateToProps)(Story);

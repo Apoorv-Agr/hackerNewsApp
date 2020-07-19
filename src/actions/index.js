@@ -3,7 +3,9 @@ import {
   FETCH_STORY_ID,
   FETCH_STORY_DETAIL,
   LOAD_STORY_DETAIL,
-} from "../constants/index";
+  UPDATE_STORE_FULL_STORY_DATA,
+  STORY_DATA_AFTER_DELETE,
+} from "../constants";
 
 export function loadStoryListIdAction() {
   return {
@@ -29,5 +31,19 @@ export function fetchSortIdsDetails(storyId = "") {
   return {
     type: FETCH_STORY_DETAIL,
     payLoad: storyId,
+  };
+}
+
+export function updateFinalDataAction(completeDetails = []) {
+  return {
+    type: UPDATE_STORE_FULL_STORY_DATA,
+    payLoad: completeDetails,
+  };
+}
+
+export function onDeleteAction(updatedDetails = []) {
+  return {
+    type: STORY_DATA_AFTER_DELETE,
+    payLoad: updatedDetails,
   };
 }

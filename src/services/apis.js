@@ -1,9 +1,10 @@
 import axios from "axios";
 import { getDesiredData } from "../selectors/filterData";
+import {API_LIMIT} from '../constants'
 
 export const baseUrl = "https://hacker-news.firebaseio.com/v0/";
 
-export const newsUrl = `${baseUrl}topstories.json?print=pretty&orderBy="$key"&limitToLast=90`;
+export const newsUrl = `${baseUrl}topstories.json?print=pretty&orderBy="$key"&limitToLast=${API_LIMIT}`;
 
 export const storyUrl = `${baseUrl}item`;
 
